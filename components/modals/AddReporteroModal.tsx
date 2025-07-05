@@ -15,6 +15,7 @@ interface AddReporteroModalProps {
   show: boolean
   onClose: () => void
   reportero?: any // Reportero a editar (opcional)
+  ciudadPredefinida?: number // ID de ciudad predefinida (opcional)
   onSuccess?: () => void
 }
 
@@ -22,6 +23,7 @@ const AddReporteroModal: React.FC<AddReporteroModalProps> = ({
   show, 
   onClose,
   reportero,
+  ciudadPredefinida,
   onSuccess
 }) => {
   const { setNotification } = useAppContext()
@@ -52,7 +54,12 @@ const AddReporteroModal: React.FC<AddReporteroModalProps> = ({
           } else {
             // Valores por defecto para nuevo reportero
             setNombre('')
-            setCiudadId(data.length > 0 ? data[0].id.toString() : '')
+            // Si hay una ciudad predefinida, usarla
+            if (ciudadPredefinida) {
+              setCiudadId(ciudadPredefinida.toString())
+            } else {
+              setCiudadId(data.length > 0 ? data[0].id.toString() : '')
+            }
             setEstado('activo')
           }
         } catch (error) {
@@ -226,7 +233,7 @@ const AddReporteroModal: React.FC<AddReporteroModalProps> = ({
                     className="w-full pl-10 pr-4 py-2.5 text-sm border border-[#e2e8f0] rounded-lg shadow-sm"
                     value={ciudadId}
                     onChange={(e) => setCiudadId(e.target.value)}
-                    disabled={loading}
+                    disabled={loading || !!ciudadPredefinida}
                   >
                     <option value="">-- Seleccione Ciudad --</option>
                     {ciudades.map(ciudad => (
