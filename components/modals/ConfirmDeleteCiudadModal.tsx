@@ -23,8 +23,8 @@ const ConfirmDeleteCiudadModal: React.FC<ConfirmDeleteCiudadModalProps> = ({
   if (!show || !ciudad) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-white bg-opacity-30">
-      <div className="bg-white rounded-lg shadow-md w-full max-w-md">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backdropFilter: "blur(8px)", backgroundColor: "rgba(0, 0, 0, 0.4)" }}>
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div className="flex justify-between items-center px-4 py-3 border-b border-[#e2e8f0]">
           <h3 className="text-base font-semibold text-[#ef4444] flex items-center gap-2">
             <FontAwesomeIcon icon={faExclamationTriangle} />

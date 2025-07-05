@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { formatCityName } from '../../utils/cityUtils'
 import AddCiudadModal from '../modals/AddCiudadModal'
+import EditCiudadModal from '../modals/EditCiudadModal'
 import ConfirmDeleteCiudadModal from '../modals/ConfirmDeleteCiudadModal'
 
 interface Ciudad {
@@ -33,7 +34,9 @@ const CiudadesTab = () => {
   const [ciudades, setCiudades] = useState<Ciudad[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [ciudadToEdit, setCiudadToEdit] = useState<Ciudad | null>(null)
   const [ciudadToDelete, setCiudadToDelete] = useState<Ciudad | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showOptionsFor, setShowOptionsFor] = useState<number | null>(null)
@@ -88,6 +91,13 @@ const CiudadesTab = () => {
   const selectCityAndTab = (cityCode: string) => {
     setSelectedCity(cityCode)
     setActiveTab('registro')
+  }
+
+  // Función para mostrar el modal de edición
+  const handleShowEditModal = (ciudad: Ciudad) => {
+    setCiudadToEdit(ciudad)
+    setShowEditModal(true)
+    setShowOptionsFor(null)
   }
 
   // Función para mostrar el modal de confirmación de eliminación
@@ -217,14 +227,7 @@ const CiudadesTab = () => {
                       className="w-full px-4 py-2 text-left text-sm hover:bg-[#f1f5f9] transition-colors flex items-center gap-2"
                       onClick={(e) => {
                         e.stopPropagation()
-                        // Aquí iría la lógica para editar
-                        setNotification({
-                          show: true,
-                          type: 'info',
-                          title: 'Próximamente',
-                          message: 'La función de editar ciudad estará disponible pronto'
-                        })
-                        setShowOptionsFor(null)
+                        handleShowEditModal(ciudad)
                       }}
                     >
                       <FontAwesomeIcon icon={faEdit} className="text-[#1a56db]" />
@@ -255,6 +258,17 @@ const CiudadesTab = () => {
               </span>
             </div>
             
+            {/* Estado de la ciudad */}
+            <div className="mb-3">
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                ciudad.activo 
+                  ? 'bg-[#ecfdf5] text-[#10b981]' 
+                  : 'bg-[#fee2e2] text-[#ef4444]'
+              }`}>
+                {ciudad.activo ? 'Activa' : 'Inactiva'}
+              </span>
+            </div>
+            
             {/* Lista de reporteros */}
             <div className="flex-1 mb-4">
               {ciudad.reporteros.length > 0 ? (
@@ -275,9 +289,10 @@ const CiudadesTab = () => {
               <button 
                 onClick={() => selectCityAndTab(ciudad.codigo)}
                 className="w-full flex items-center justify-center gap-2 px-3 py-1.5 text-sm bg-white text-[#1a56db] border border-[#bfdbfe] rounded-lg shadow-sm hover:bg-[#e0f2fe] transition-colors"
+                disabled={!ciudad.activo}
               >
                 <FontAwesomeIcon icon={faClipboardList} />
-                Registrar Despachos
+                {ciudad.activo ? 'Registrar Despachos' : 'Ciudad Inactiva'}
               </button>
             </div>
           </div>
@@ -294,6 +309,19 @@ const CiudadesTab = () => {
       <AddCiudadModal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
+        onSuccess={() => {
+          loadCiudades()
+        }}
+      />
+      
+      {/* Modal para editar ciudad */}
+      <EditCiudadModal
+        show={showEditModal}
+        onClose={() => {
+          setShowEditModal(false)
+          setCiudadToEdit(null)
+        }}
+        ciudad={ciudadToEdit}
         onSuccess={() => {
           loadCiudades()
         }}

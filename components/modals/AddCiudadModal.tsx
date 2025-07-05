@@ -153,8 +153,8 @@ const AddCiudadModal: React.FC<AddCiudadModalProps> = ({
   if (!show) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backdropFilter: "blur(2px)" }}>
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md transform transition-transform duration-300">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backdropFilter: "blur(8px)", backgroundColor: "rgba(0, 0, 0, 0.4)" }}>
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-transform duration-300">
         <div className="flex justify-between items-center px-5 py-4 border-b border-[#e2e8f0]">
           <h3 className="text-lg font-semibold text-[#1a365d] flex items-center gap-2">
             <FontAwesomeIcon icon={faCity} />
